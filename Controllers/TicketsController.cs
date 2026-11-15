@@ -30,7 +30,6 @@ public class TicketsController : Controller
 
     // Display the ticket creation form
     [HttpGet]
-
     public async Task<IActionResult> Create()
     {
         ViewBag.Categories = await _context.Categories.ToListAsync();
@@ -39,13 +38,26 @@ public class TicketsController : Controller
         return View();
     }
 
+
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(
-    string title,
-    string description,
-    int categoryId,
-    int equipmentId)
+        string title,
+        string description,
+        int categoryId,
+        int equipmentId)
     {
+
+        if (!await ValidateTicketAsync(title, categoryId, equipmentId))
+        {
+            ViewBag.Categories = await _context.Categories.ToListAsync();
+            ViewBag.Equipment = await _context.Equipment.ToListAsync();
+
+            return View();
+        }
+
+        title = title.Trim();
+
         var ticket = new Ticket
         {
             Title = title,
@@ -60,4 +72,31 @@ public class TicketsController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+
+    private async Task<bool> ValidateTicketAsync(
+    string title,
+    int categoryId,
+    int equipmentId)
+    {
+        if (string.IsNullOrWhiteSpace(title) || title.Length > 150)
+        {
+            ModelState.AddModelError("Title",
+                "Pavadinimas turi būti nuo 1 iki 150 simbolių.");
+        }
+
+        if (!await _context.Categories.AnyAsync(c => c.Id == categoryId))
+        {
+            ModelState.AddModelError("CategoryId",
+                "Pasirinkta kategorija neegzistuoja.");
+        }
+
+        if (!await _context.Equipment.AnyAsync(e => e.Id == equipmentId))
+        {
+            ModelState.AddModelError("EquipmentId",
+                "Pasirinkta įranga neegzistuoja.");
+        }
+
+        return ModelState.IsValid;
+    }
 }
+

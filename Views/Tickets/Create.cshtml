@@ -13,6 +13,9 @@
         <label for="title" class="form-label">Title</label>
         <input id="title" name="Title" type="text" class="form-control"
                maxlength="150" required />
+        <span class="text-danger">
+    @Html.ValidationMessage("Title")
+</span>
     </div>
 
     <div class="mb-3">
