@@ -1,0 +1,47 @@
+
+@using HelpdeskApp.Models
+
+@{
+    ViewData["Title"] = "Create Ticket";
+}
+
+<h1>Create Support Ticket</h1>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input id="title" name="Title" type="text" class="form-control"
+               maxlength="150" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea id="description" name="Description"
+                  class="form-control" rows="4"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="category" class="form-label">Category</label>
+        <select id="category" name="CategoryId" class="form-select" required>
+            <option value="">Select category</option>
+            @foreach (var category in (IEnumerable<Category>)ViewBag.Categories)
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="equipment" class="form-label">Equipment</label>
+        <select id="equipment" name="EquipmentId" class="form-select" required>
+            <option value="">Select equipment</option>
+            @foreach (var equipment in (IEnumerable<Equipment>)ViewBag.Equipment)
+            {
+                <option value="@equipment.Id">@equipment.Name</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Ticket</button>
+</form>
