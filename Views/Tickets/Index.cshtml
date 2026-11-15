@@ -14,6 +14,7 @@
             <th>Status</th>
             <th>Category</th>
             <th>Equipment</th>
+            <th>Veiksmai</th>
         </tr>
     </thead>
     <tbody>
@@ -35,6 +36,11 @@ else
             <td>@ticket.Status</td>
             <td>@ticket.Category?.Name</td>
             <td>@ticket.Equipment?.Name</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@ticket.Id" class="btn btn-sm btn-outline-primary">
+                    Peržiūrėti
+                </a>
+</td>
         </tr>
     }
 }

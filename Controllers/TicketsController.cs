@@ -73,6 +73,25 @@ public class TicketsController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+
+    // Display details of a specific ticket
+    [HttpGet]
+    public async Task<IActionResult> Details(int id)
+    {
+        var ticket = await _context.Tickets
+            .Include(t => t.Category)
+            .Include(t => t.Equipment)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+        if (ticket == null)
+        {
+            return NotFound();
+        }
+
+        return View(ticket);
+    }
+
+
     private async Task<bool> ValidateTicketAsync(
     string title,
     int categoryId,
