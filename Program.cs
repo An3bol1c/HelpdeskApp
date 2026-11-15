@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using HelpdeskApp.Data;
+using HelpdeskApp.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,6 +77,32 @@ using (var scope2 = app.Services.CreateScope())
     var u = await um.FindByEmailAsync("test1@test.lt");
     if (u != null && !await um.IsInRoleAsync(u, "Admin"))
         await um.AddToRoleAsync(u, "Admin");
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    if (!db.Categories.Any())
+    {
+        db.Categories.AddRange(
+            new Category { Name = "Aparatinė įranga" },
+            new Category { Name = "Programinė įranga" },
+            new Category { Name = "Tinklas" },
+            new Category { Name = "Spausdintuvai" });
+        db.SaveChanges();
+    }
+
+    if (!db.Equipment.Any())
+    {
+        db.Equipment.AddRange(
+            new Equipment { Name = "Dell Latitude 5420", InventoryNumber = "PC-001", Location = "A201 kab." },
+            new Equipment { Name = "Dell Latitude 5420", InventoryNumber = "PC-002", Location = "A202 kab." },
+            new Equipment { Name = "HP LaserJet Pro M404", InventoryNumber = "PR-001", Location = "Biblioteka" },
+            new Equipment { Name = "Epson EB-W49 projektorius", InventoryNumber = "PJ-001", Location = "B105 aud." },
+            new Equipment { Name = "TP-Link Archer AX55", InventoryNumber = "NW-001", Location = "Serverinė" });
+        db.SaveChanges();
+    }
 }
 
 app.Run();

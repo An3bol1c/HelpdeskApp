@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using HelpdeskApp.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HelpdeskApp.Data;
@@ -9,4 +10,8 @@ public class ApplicationDbContext : IdentityDbContext
         : base(options)
     {
     }
+
+    public DbSet<Equipment> Equipment { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Ticket> Tickets { get; set; }
 }
