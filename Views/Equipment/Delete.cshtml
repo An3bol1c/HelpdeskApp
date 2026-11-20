@@ -1,0 +1,39 @@
+@model HelpdeskApp.Models.Equipment
+
+@{
+    ViewData["Title"] = "Ištrinti įrenginį";
+}
+
+<div class="mb-4">
+    <p class="text-uppercase text-danger fw-semibold small mb-1">Inventorius</p>
+    <h1 class="h2 mb-0">Ištrinti įrenginį</h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 col-xl-7">
+        <div class="card border-danger-subtle shadow-sm">
+            <div class="card-body p-4">
+                <div class="alert alert-warning" role="alert">
+                    Ištrynus įrenginį, taip pat bus ištrinti su juo susiję gedimai.
+                    Susijusių gedimų: @ViewBag.RelatedTicketCount.
+                </div>
+
+                <dl class="row">
+                    <dt class="col-sm-4">Pavadinimas</dt>
+                    <dd class="col-sm-8">@Model.Name</dd>
+                    <dt class="col-sm-4">Inventoriaus numeris</dt>
+                    <dd class="col-sm-8">@Model.InventoryNumber</dd>
+                    <dt class="col-sm-4">Vieta</dt>
+                    <dd class="col-sm-8">@Model.Location</dd>
+                </dl>
+
+                <form asp-action="DeleteConfirmed" asp-route-id="@Model.Id" method="post">
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="submit" class="btn btn-danger">Ištrinti įrenginį ir susijusius gedimus</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Atšaukti</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
