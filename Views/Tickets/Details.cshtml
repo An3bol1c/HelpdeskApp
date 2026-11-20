@@ -5,22 +5,35 @@
     ViewData["Title"] = "Gedimo informacija";
 }
 
-<h1>Gedimo informacija</h1>
+<div class="mb-4">
+    <p class="text-uppercase text-primary fw-semibold small mb-1">Gedimo informacija</p>
+    <h1 class="h2 mb-0">@Model.Title</h1>
+</div>
 
-<div class="card mt-3">
-    <div class="card-body">
-        <h4>@Model.Title</h4>
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <h2 class="h5 mb-3">Informacija</h2>
+        <p class="text-body-secondary">@Model.Description</p>
         <hr />
-
-        <p><strong>Aprašymas:</strong> @Model.Description</p>
-        <p><strong>Prioritetas:</strong> @Model.Priority</p>
-        <p><strong>Būsena:</strong> @Model.Status</p>
-        <p><strong>Kategorija:</strong> @Model.Category?.Name</p>
-        <p><strong>Įranga:</strong> @Model.Equipment?.Name</p>
-        <p><strong>Sukurta:</strong> @Model.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</p>
+        @if (User.IsInRole("Admin") || User.IsInRole("Technician"))
+        {
+            <p><strong>Užregistravo:</strong> @ViewData["ReporterEmail"]</p>
+        }
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Prioritetas</dt>
+            <dd class="col-sm-9"><span class="badge text-bg-secondary">@Model.Priority</span></dd>
+            <dt class="col-sm-3">Būsena</dt>
+            <dd class="col-sm-9"><span class="badge @(Model.Status == "Closed" ? "text-bg-success" : "text-bg-warning")">@Model.Status</span></dd>
+            <dt class="col-sm-3">Kategorija</dt>
+            <dd class="col-sm-9">@Model.Category?.Name</dd>
+            <dt class="col-sm-3">Įranga</dt>
+            <dd class="col-sm-9">@Model.Equipment?.Name</dd>
+            <dt class="col-sm-3">Sukurta</dt>
+            <dd class="col-sm-9">@Model.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</dd>
+        </dl>
     </div>
 </div>
 
-<a asp-action="Index" class="btn btn-secondary mt-3">
+<a asp-action="Index" class="btn btn-outline-secondary mt-3">
     Grįžti į gedimų sąrašą
 </a>
