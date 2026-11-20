@@ -9,42 +9,55 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HelpdeskApp.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="bg-body-tertiary d-flex flex-column min-vh-100">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">IT Helpdesk</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">IT Helpdesk</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavigation"
+                        aria-controls="mainNavigation" aria-expanded="false" aria-label="Perjungti navigaciją">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="mainNavigation">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Pradžia</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Pradžia</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Apie projektą</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Apie projektą</a>
                         </li>
-
-                        @if (User.Identity!.IsAuthenticated)
+                        @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Tickets" asp-action="Index">Mano gedimai</a>
+                                <a class="nav-link" asp-controller="Admin" asp-action="Index">Administratoriaus skydelis</a>
                             </li>
-
-                            @if (User.IsInRole("Technician") || User.IsInRole("Admin"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Technician" asp-action="Index">IT skydelis</a>
-                                </li>
-                            }
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index">Administravimas</a>
-                                </li>
-                            }
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="ManageRoles">Vartotojai ir rolės</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin") || User.IsInRole("Technician"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Technician" asp-action="Index">IT skydelis</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Technician" asp-action="Tickets">Gedimai</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Equipment" asp-action="Index">Įrangos valdymas</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("User"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="User" asp-action="Index">Mano skydelis</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="User" asp-action="MyTickets">Mano gedimai</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Tickets" asp-action="Create">Registruoti gedimą</a>
+                            </li>
                         }
                     </ul>
                     <partial name="_LoginPartial" />
@@ -52,17 +65,18 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - IT Helpdesk - Klaidas Kasparavičius - <a href="mailto:klaidasnu10@gmail.com">klaidasnu10@gmail.com</a>
+    <main role="main" class="container flex-grow-1 py-4">
+        @RenderBody()
+    </main>
+
+    <footer class="border-top bg-white mt-auto py-3">
+        <div class="container small text-muted">
+            &copy; 2026 - IT Helpdesk - Klaidas Kasparavičius -
+            <a href="mailto:klaidasnu10@gmail.com">klaidasnu10@gmail.com</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
