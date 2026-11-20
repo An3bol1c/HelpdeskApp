@@ -1,0 +1,78 @@
+@model IReadOnlyList<HelpdeskApp.Models.UserRolesViewModel>
+
+@{
+    ViewData["Title"] = "Vartotojai ir rolės";
+}
+
+<div class="mb-4">
+    <p class="text-uppercase text-primary fw-semibold small mb-1">Administravimas</p>
+    <h1 class="h2 mb-2">Vartotojai ir rolės</h1>
+    <p class="text-muted mb-0">Pasirinkite vieną naują rolę. Jau priskirta rolė pasirinkimų sąraše nerodoma.</p>
+</div>
+
+@if (TempData["RoleMessage"] is string roleMessage)
+{
+    <div class="alert alert-success" role="status">@roleMessage</div>
+}
+@if (TempData["RoleError"] is string roleError)
+{
+    <div class="alert alert-danger" role="alert">@roleError</div>
+}
+<div asp-validation-summary="All" class="text-danger" role="alert"></div>
+
+<section class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>El. paštas</th>
+                    <th>Rolės</th>
+                    <th>Keisti rolę</th>
+                </tr>
+            </thead>
+            <tbody>
+        @if (Model.Count == 0)
+        {
+            <tr>
+                <td colspan="3" class="text-center text-muted">Vartotojų nėra.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Email</td>
+                    <td>@(user.Roles.Count == 0 ? "Nėra priskirtų rolių" : string.Join(", ", user.Roles))</td>
+                    <td>
+                        @if (user.AvailableRoles.Count > 0)
+                        {
+                            <form asp-controller="Admin" asp-action="ChangeRole" method="post">
+                                <input type="hidden" name="userId" value="@user.UserId" />
+                                <div class="d-flex flex-column flex-md-row gap-2">
+                                    <select name="selectedRole"
+                                            class="form-select"
+                                            required
+                                            aria-label="Pasirinkite vieną rolę">
+                                        <option value="" selected disabled>Pasirinkite rolę</option>
+                                        @foreach (var role in user.AvailableRoles)
+                                        {
+                                            <option value="@role">@role</option>
+                                        }
+                                    </select>
+                                    <button type="submit" class="btn btn-primary text-nowrap">Keisti</button>
+                                </div>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Visos rolės priskirtos</span>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+            </tbody>
+        </table>
+    </div>
+</section>
